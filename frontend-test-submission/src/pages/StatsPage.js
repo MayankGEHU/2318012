@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Typography,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Button,
-} from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import UrlTable from '../components/UrlTable';
 import { log } from '../utils/log';
 
 const TOKEN = process.env.REACT_APP_LOGGER_BEARER_TOKEN || '';
@@ -21,11 +13,10 @@ function StatsPage() {
     setLinks(stored);
   }, []);
 
-  const handleClick = async (idx) => {
+  const handleClick = async (idx, url) => {
     const updatedLinks = [...links];
     const now = new Date().toISOString();
 
-    // Simulate a fake click
     updatedLinks[idx].clickCount = (updatedLinks[idx].clickCount || 0) + 1;
     updatedLinks[idx].clicks.push({
       timestamp: now,
@@ -43,55 +34,21 @@ function StatsPage() {
       `Link clicked: ${updatedLinks[idx].shortcode}`,
       TOKEN
     );
+
+    window.open(url, '_blank');
   };
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
+      <Typography variant="h5" sx={{ mb: 3 }}>
         Shortened URL Statistics
       </Typography>
 
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Short Link</TableCell>
-            <TableCell>Original URL</TableCell>
-            <TableCell>Created</TableCell>
-            <TableCell>Expiry</TableCell>
-            <TableCell>Clicks</TableCell>
-            <TableCell>Click Details</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {links.map((link, idx) => (
-            <TableRow key={link.shortcode}>
-              <TableCell>
-                <Button onClick={() => handleClick(idx)}>
-                  {window.location.origin}/{link.shortcode}
-                </Button>
-              </TableCell>
-              <TableCell>{link.longUrl}</TableCell>
-              <TableCell>{new Date(link.createdAt).toLocaleString()}</TableCell>
-              <TableCell>{new Date(link.expiresAt).toLocaleString()}</TableCell>
-              <TableCell>{link.clickCount}</TableCell>
-              <TableCell>
-                {link.clicks && link.clicks.length > 0 ? (
-                  <ul style={{ paddingLeft: 16, margin: 0 }}>
-                    {link.clicks.map((click, cidx) => (
-                      <li key={cidx}>
-                        {new Date(click.timestamp).toLocaleString()} |{' '}
-                        {click.source} | {click.geo}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  '—'
-                )}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      {links.length === 0 ? (
+        <Typography>No shortened URLs found.</Typography>
+      ) : (
+        <UrlTable links={links} onOpenClick={handleClick} />
+      )}
     </Box>
   );
 }
