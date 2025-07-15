@@ -3,7 +3,7 @@ import URLInputForm from '../components/URLInputForm';
 import { Box, List, ListItem, Typography, Alert } from '@mui/material';
 import { log } from '../utils/log';
 
-const TOKEN = '<YOUR_BEARER_TOKEN_HERE>'; // Replace with actual token
+const TOKEN = process.env.REACT_APP_LOGGER_BEARER_TOKEN || '';
 
 function generateShortCode(existing, preferred) {
   const charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -82,16 +82,16 @@ function URLShortenerPage() {
     <Box sx={{ p: 3 }}>
       <URLInputForm onSubmit={handleSubmit} />
       {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+
       <Typography variant="h6" sx={{ mt: 4 }}>Shortened URLs:</Typography>
       <List>
-        {validLinks.map((link) => (
+        {validLinks.length > 0 ? validLinks.map((link) => (
           <ListItem key={link.shortcode}>
             <strong>{window.location.origin}/{link.shortcode}</strong>
             &nbsp;→&nbsp; {link.longUrl}
             &nbsp;| Expires: {new Date(link.expiresAt).toLocaleString()}
           </ListItem>
-        ))}
-        {!validLinks.length && (
+        )) : (
           <Typography variant="body2" sx={{ mt: 2 }}>No valid links yet.</Typography>
         )}
       </List>

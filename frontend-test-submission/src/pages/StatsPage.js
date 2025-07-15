@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { log } from '../utils/log';
 
-const TOKEN = '<YOUR_BEARER_TOKEN_HERE>'; // Replace with your actual token
+const TOKEN = process.env.REACT_APP_LOGGER_BEARER_TOKEN || '';
 
 function StatsPage() {
   const [links, setLinks] = useState([]);
