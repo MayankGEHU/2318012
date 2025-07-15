@@ -12,9 +12,8 @@ A fully functional, responsive URL Shortener built in React, developed for the A
 
 ## Tech Stack
 
-- *Frontend:* React (functional components, hooks)
-- *Styling:* Material UI only
-- *State Management:* React built-in state (no Redux)
-- *Logging:* Reusable logging middleware that posts logs to the provided AffordMed log API
+- *Frontend:* React 
+- *Styling:* Material
+- *State Management:* React built-in state
 
 ## Directory Structure
